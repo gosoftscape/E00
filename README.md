@@ -18,7 +18,7 @@
         $fieldKey:{
             name:$fieldName,
             type:[text|number|select|multiSelect|cascade|file|date|time]
-            value:$fieldValue,
+            option:$fieldOption,
             isRequired:[true|false],
             status:[true|false]
         },
@@ -45,7 +45,7 @@
       - 单选/多选/级联类型key使用两位小写字符,从aa依次递增至zz,每次遍历所有key按字母表顺序递增,获取下一个key.
       - 文件类型使用两个字段分别叫$fieldKey+FileURL,$fieldKey+FileName存储文件URL和文件名称.
       - 日期/时间类型使用公司规范.
-    - value:当类型为单选多选级联三种选择时,此字段用于存储备选值
+    - option:当类型为单选多选级联三种选择时,此字段用于存储备选值
       - 单选多选时,此字段结构如下:
       ```
       [
@@ -72,7 +72,7 @@
     - isRequired存储该字段是否必填,用布尔值表示.
     - status存储该字段是否启用,用布尔值表示.
   - 使用CustomizeCustomerInfo表存储客户信息(暂时保留CustomerInfo表),该表初始状态只有id字段,作为主键,随后根据字典定制功能中的定制,动态添加/删除/修改/移动字段.
-  - 字典定制功能左边栏选择对象,目前只支持定制客户对象,右边是字段列表,有添加/删除/修改/移动/启用/禁用功能,
+  - 字典定制功能左边栏选择对象,目前只支持定制客户对象,右边是字段列表,有字段添加/删除/修改/移动/启用/禁用功能,选项添加/删除/修改/移动功能.
     - 移动就是使用拖拽来改变选中字段的顺序,使用sql的修改字段在另一个字段后来实现.
     - 修改只支持修改除类型之外的字段属性,和文本类型的长度.
     - 禁用意味着不删除字段,保留字段数据的情况下,达到删除字段的其他效果,启用是其相反效果.
@@ -80,31 +80,51 @@
     ```
     [
       {
-        action:insert,
+        action:fieldInsert,
         name,
         type,
-        value,
         isRequired,
         status,
       },
       {
-        action:delete,
+        action:fieldDelete,
         fieldKey,
       },
       {
-        action:update,
+        action:fieldUpdate,
         key:[name|type|value|isRequired|status],
         value,
       },
       {
-        action:updateSort,
+        action:fieldUpdateSort,
         srcFieldKey, //被移动的字段
         dstFieldKey, //移动到该字段之后
       },
       {
-        action:[enable|disable],
+        action:[fieldEnable|fieldDisable],
         fieldKey,
-      }
+      },
+      {
+        action:optionInsert,
+        fieldKey,
+      },
+      {
+        action:optionDelete,
+        fieldKey,
+        optionKey,
+      },
+      {
+        action:optionUpdate,
+        fieldKey,
+        optionKey,
+        optionValue,
+      },
+      {
+        action:optionUpdateSort,
+        fieldKey,
+        srcOptionKey, //被移动的选项
+        dstOptionKey, //移动到该选项之后
+      },
     ]
     ```
   - 后端提供按照对象名称查询该对象字典的功能,用于前端进入客户管理页面之后查询,字典数据结合客户数据共同驱动页面,这个部分由于前端需要处理很多逻辑,所以把禁用字段的功能也放在前端一起处理.
