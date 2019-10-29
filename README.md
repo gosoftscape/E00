@@ -22,7 +22,7 @@
             isRequired:[true|false],
             status:[true|false]
         },
-	      ...
+        ...
     }]
     ```
     - fieldKey使用两位小写字符,从aa依次递增至zz,每次遍历所有fieldKey按字母表顺序递增,获取下一个fieldKey,同一个对象总共可以有26*26=676个字段,不考虑超出这个数字的情况.
