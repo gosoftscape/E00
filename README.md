@@ -18,7 +18,7 @@
         $fieldKey:{
             name:$fieldName,
             type:[text|number|select|multiSelect|cascade|file|date|time]
-            option:$fieldOption,
+            options:$fieldOption,
             isRequired:[true|false],
             status:[true|false]
         },
@@ -45,7 +45,7 @@
       - 单选/多选/级联类型key使用两位小写字符,从aa依次递增至zz,每次遍历所有key按字母表顺序递增,获取下一个key.
       - 文件类型使用两个字段分别叫$fieldKey+FileURL,$fieldKey+FileName存储文件URL和文件名称.
       - 日期/时间类型使用公司规范.
-    - option:当类型为单选多选级联三种选择时,此字段用于存储备选值
+    - options:当类型为单选多选级联三种选择时,此字段用于存储备选值
       - 单选多选时,此字段结构如下:
       ```
       [
@@ -105,30 +105,21 @@
         fieldKey,
       },
       {
-        action:optionInsert,
-        fieldKey,
-      },
-      {
-        action:optionDelete,
-        fieldKey,
-        optionKey,
-      },
-      {
         action:optionUpdate,
         fieldKey,
-        optionKey,
-        optionValue,
-      },
-      {
-        action:optionUpdateSort,
-        fieldKey,
-        srcOptionKey, //被移动的选项
-        dstOptionKey, //移动到该选项之后
+        options:[
+          {
+            key,
+            value,
+            children,
+          },
+          ...
+        ]
       },
     ]
     ```
   - 后端提供按照对象名称查询该对象字典的功能,用于前端进入客户管理页面之后查询,字典数据结合客户数据共同驱动页面,这个部分由于前端需要处理很多逻辑,所以把禁用字段的功能也放在前端一起处理.
-  - 客户管理详情页面,暂时不加区别地使用一行一列的格式显示.
+  - 客户管理详情页面,暂时不加区别地使用一行一个字段的格式显示.
   - 根据条件查询客户的功能,后端由于不知道字段,无法使用惯用的mybatis动态sql功能,这部分需要使用jdbcTemplate遍历参数动态处理条件/分页/排序的功能.
   - 创建一个git分支实现字典定制功能,由于这部分功能实现有可能耽误线上版本的小幅度修改需求,所以需要使用分支机制.
 
